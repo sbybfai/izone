@@ -15,13 +15,16 @@ user_model = settings.AUTH_USER_MODEL
 @login_required
 @require_POST
 def AddcommentView(request):
-    if request.is_ajax():
+    if request.is_ajax() and request.method == "POST":
         data = request.POST
         new_user = request.user
         new_content = data.get('content')
         article_id = data.get('article_id')
         rep_id = data.get('rep_id')
         the_article = Article.objects.get(id=article_id)
+        if len(new_content) > 1048:
+            return JsonResponse({'msg': '你的评论字数超过1048，无法保存。'})
+
         if not rep_id:
             new_comment = ArticleComment(author=new_user, content=new_content, belong=the_article, parent=None,
                                          rep_to=None)
@@ -47,7 +50,7 @@ def NotificationView(request, is_read=None):
 @require_POST
 def mark_to_read(request):
     '''将一个消息标记为已读'''
-    if request.is_ajax():
+    if request.is_ajax() and request.method == "POST":
         data = request.POST
         user = request.user
         id = data.get('id')
@@ -61,7 +64,7 @@ def mark_to_read(request):
 @require_POST
 def mark_to_delete(request):
     '''将一个消息删除'''
-    if request.is_ajax():
+    if request.is_ajax() and request.method == "POST":
         data = request.POST
         user = request.user
         id = data.get('id')

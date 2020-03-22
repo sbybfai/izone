@@ -2,9 +2,14 @@
 from django.contrib.sitemaps import Sitemap
 from .models import Article, Category, Tag
 from django.db.models.aggregates import Count
+from .utils import site_protocol
 
 
-class ArticleSitemap(Sitemap):
+class MySitemap(Sitemap):
+    protocol = site_protocol()
+
+
+class ArticleSitemap(MySitemap):
     changefreq = 'weekly'
     priority = 1.0
 
@@ -14,7 +19,8 @@ class ArticleSitemap(Sitemap):
     def lastmod(self, obj):
         return obj.update_date
 
-class CategorySitemap(Sitemap):
+
+class CategorySitemap(MySitemap):
     changefreq = 'weekly'
     priority = 0.8
 
@@ -25,7 +31,7 @@ class CategorySitemap(Sitemap):
         return obj.article_set.first().create_date
 
 
-class TagSitemap(Sitemap):
+class TagSitemap(MySitemap):
     changefreq = 'weekly'
     priority = 0.8
 
