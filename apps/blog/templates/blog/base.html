@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- TDK and ICO -->
-    <title>{% block head_title %}{% endblock %}_{{ site_end_title }}</title>
+    <title>{% block head_title %}{% endblock %}{{ site_end_title }}</title>
     {% block metas %}
     <meta name="description" content="{{ site_description }}">
     <meta name="keywords" content="{{ site_keywords }}">
@@ -70,8 +70,8 @@ if(msgs>0){var _record=0;var myTitle=document.title;function titleBlink(){_recor
 {% block end_file %}{% endblock %}
 <footer class="container-fluid mt-4">
     <div class="card-body text-center px-0 f-16">
-        <p class="card-text mb-1">Copyright&nbsp;&copy;&nbsp;2017-2018
-            <a href="https://github.com/Hopetree" target="_blank" title="博客作者的Github">Hopetree</a>.&nbsp;Powered&nbsp;by&nbsp;Django.
+        <p class="card-text mb-1">Copyright&nbsp;&copy;&nbsp;2020
+            <a href="https://github.com/sbybfai" target="_blank" title="博客作者的Github">sbybfai</a>.&nbsp;Powered&nbsp;by&nbsp;Django.
         </p>
         <p class="mb-0">
             <a href="http://www.miibeian.gov.cn/" target="_blank">{{ beian }}</a>
