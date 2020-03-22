@@ -80,7 +80,7 @@ class Article(models.Model):
     slug = models.SlugField(unique=True)
     is_top = models.BooleanField('置顶', default=False)
 
-    category = models.ForeignKey(Category, verbose_name='文章分类',on_delete=None)
+    category = models.ForeignKey(Category, verbose_name='文章分类',on_delete=models.PROTECT)
     tags = models.ManyToManyField(Tag, verbose_name='标签')
     keywords = models.ManyToManyField(Keyword, verbose_name='文章关键词',
                                       help_text='文章关键词，用来作为SEO中keywords，最好使用长尾词，3-4个足够')

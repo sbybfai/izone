@@ -13,10 +13,11 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
+from django.conf.urls import include
 from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib import admin
+from django.urls import path
 from django.views.generic import TemplateView
 
 from django.contrib.sitemaps.views import sitemap
@@ -43,18 +44,18 @@ sitemaps = {
 }
 
 urlpatterns = [
-    url(r'^adminx/', admin.site.urls),
-    url(r'^accounts/', include('allauth.urls')),  # allauth
-    url(r'^accounts/', include(('oauth.urls', 'oauth'), namespace='oauth')),  # oauth,只展现一个用户登录界面
-    url('', include(('blog.urls', 'blog'), namespace='blog')),  # blog
-    url(r'^comment/',include(('comment.urls', 'comment'),namespace='comment')), # comment
-    url(r'^robots\.txt$', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')), # robots
-    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'), # 网站地图
-    url(r'^feed/$', AllArticleRssFeed(), name='rss'),   # rss订阅
+    path('adminx/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),  # allauth
+    path('accounts/', include(('oauth.urls', 'oauth'), namespace='oauth')),  # oauth,只展现一个用户登录界面
+    path('', include(('blog.urls', 'blog'), namespace='blog')),  # blog
+    path('comment/',include(('comment.urls', 'comment'),namespace='comment')), # comment
+    path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')), # robots
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'), # 网站地图
+    path('feed/', AllArticleRssFeed(), name='rss'),   # rss订阅
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # 加入这个才能显示media文件
 
 if settings.API_FLAG:
-    urlpatterns.append(url(r'^api/v1/',include((router.urls, 'api'),namespace='api')))    # restframework
+    urlpatterns.append(path('api/v1/',include((router.urls, 'api'),namespace='api')))    # restframework
 
 if settings.TOOL_FLAG:
-    urlpatterns.append(url(r'^tool/', include(('tool.urls', 'tool'),namespace='tool')))    # tool
+    urlpatterns.append(path('tool/', include(('tool.urls', 'tool'),namespace='tool')))    # tool
