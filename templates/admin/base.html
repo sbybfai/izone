@@ -7,11 +7,10 @@
   <title>{% block title %}{% endblock %}</title>
   <link rel="icon" href="{% static 'blog/img/favicon.ico'%}">
   {% block bootstrap_admin_css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap_admin/css/bootstrap.min.css' %}" />
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet">
   {% endblock bootstrap_admin_css %}
 
   <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static 'admin/css/base.css' %}{% endblock %}" />
-  {% datetime_widget_css_path as datetime_widget_css %}
   {% if datetime_widget_css %}
     <link rel="stylesheet" type="text/css" href="{% static datetime_widget_css %}" />
   {% endif %}
@@ -26,13 +25,8 @@
 {% endif %}
 
 {% block jquery %}
-  {% jquery_vendor_path as jquery_path  %}
-  {% if jquery_path %}
-    <script type="text/javascript" src="{% static jquery_path %}"></script>
-  {% else %}
-    <script type="text/javascript" src="{% static "admin/js/jquery.js" %}"></script>
-  {% endif %}
-    <script type="text/javascript" src="{% static "admin/js/jquery.init.js" %}"></script>
+    <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'admin/js/jquery.init.js' %}"></script>
 {% endblock jquery %}
   <script>
     (function ($) {
@@ -80,7 +74,26 @@
                 </a>
               {% endblock branding %}
               {% block filters %}{% endblock filters %}
-              {% render_menu_app_list %}
+
+              {% if available_apps %}
+              {% for app in available_apps %}
+                <ul class="nav nav-sidebar app-{{ app.app_label }} module{% if app.app_url in current_url %} has-active-menu show-models{% endif %}">
+                  <li {% if app.app_url == current_url %} class="active"{% endif %}>
+                    <a href="{{ app.app_url }}" class="section" title="{% blocktrans with name=app.name %}Models in the {{ name }} application{% endblocktrans %}">
+                      {{ app.name }}
+                    </a>
+                  </li>
+                  {% for model in app.models %}
+                    <li {% if model.admin_url in current_url %}class="active"{% endif %}>
+                      <a href="{% firstof model.admin_url model.add_url '#' %}" title="{% if not model.admin_url and not model.add_url %}{% trans "You don't have permission to edit anything." %}{% endif %}">{{ model.name }}</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endfor %}
+            {% else %}
+              <p class="permission-warning">{% trans "You don't have permission to edit anything." %}</p>
+            {% endif %}
+
             </div>
           {% endblock sidebar_menu %}
         {% endif %}
@@ -176,7 +189,7 @@
   </div>
 
 {% block bootstrap_admin_js %}
-  <script src="{% static 'bootstrap_admin/js/bootstrap.min.js' %}"></script>
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="{% static 'bootstrap_admin/js/base.js' %}"></script>
 {% endblock bootstrap_admin_js %}
 

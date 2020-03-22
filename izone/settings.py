@@ -14,9 +14,9 @@ import os
 import sys
 
 # 更换默认的数据库连接
-import pymysql
-
-pymysql.install_as_MySQLdb()
+# import pymysql
+#
+# pymysql.install_as_MySQLdb()
 # 导入网站个人信息，非通用信息
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -233,11 +233,12 @@ DATABASES = {
 # 使用django-redis缓存页面，缓存配置如下：
 REDIS_HOST = os.getenv('IZONE_REDIS_HOST', '127.0.0.1')
 REDIS_PORT = os.getenv('IZONE_REDIS_PORT', 6379)
+REDIS_PASSWORD = os.getenv('IZONE_REDIS_PASSWORD', '')
 
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://{}:{}".format(REDIS_HOST, REDIS_PORT),
+        "LOCATION": "redis://:{}@{}:{}".format(REDIS_PASSWORD, REDIS_HOST, REDIS_PORT),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
